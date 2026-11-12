@@ -1,0 +1,15 @@
+# JSON REST Server - ambiente didatico local
+name: HelpDesk API
+port: 8080
+host: 127.0.0.1
+database: database.json
+idType: int
+enableSocket: false
+
+auth:
+  jwtSecret: "SUBSTITUA_POR_UMA_CHAVE_ALEATORIA_LONGA_E_SECRETA"
+  jwtExpire: 3600
+  unauthorizedStatusCode: 403
+  enableAdm: true
+  urlUserPermission: []
+  urlSkip: []

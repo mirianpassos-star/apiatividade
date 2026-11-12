@@ -1,0 +1,24 @@
+# Dependencies and build output
+**/node_modules/
+**/dist/
+
+# Local environment and credentials
+**/.env
+**/.env.*
+!**/.env.example
+helpdesk-jrs/config.yaml
+helpdesk-jrs/database.json
+
+# Prisma-generated assistant skill copies
+api-cotacoes/.agents/
+api-cotacoes/.claude/
+api-cotacoes/.cursor/
+api-cotacoes/.devin/
+
+# Local Dart tooling
+**/.dart_tool/
+**/.packages
+
+# OS/editor files and logs
+.DS_Store
+*.log

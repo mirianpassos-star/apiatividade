@@ -1,0 +1,377 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-11-04T22:58:00.000Z",
+  "__export_source": "insomnia.desktop.app",
+  "resources": [
+    {
+      "_id": "wrk_api_cotacoes",
+      "parentId": null,
+      "modified": 1793833080000,
+      "created": 1793833080000,
+      "name": "API de Cotações",
+      "description": "Requisições de exemplo para testar a API local de cotações.",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_api_cotacoes",
+      "parentId": "wrk_api_cotacoes",
+      "modified": 1793833080000,
+      "created": 1793833080000,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3000/api",
+        "cliente_id": "",
+        "ponto_de_venda_id": "",
+        "produto_id": "",
+        "token": "",
+        "manager_email": "gestor@example.com",
+        "manager_password": ""
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url",
+          "cliente_id",
+          "ponto_de_venda_id",
+          "produto_id",
+          "token",
+          "manager_email",
+          "manager_password"
+        ]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1,
+      "_type": "environment"
+    },
+    {
+      "_id": "jar_api_cotacoes",
+      "parentId": "wrk_api_cotacoes",
+      "modified": 1793833080000,
+      "created": 1793833080000,
+      "name": "Insomnia",
+      "cookies": [],
+      "_type": "cookie_jar"
+    },
+    {
+      "_id": "req_health",
+      "parentId": "wrk_api_cotacoes",
+      "modified": 1793833080000,
+      "created": 1793833080000,
+      "url": "{{ _.base_url }}/health",
+      "name": "Verificar API",
+      "description": "Deve retornar status ok.",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 1,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_register",
+      "parentId": "wrk_api_cotacoes",
+      "modified": 1793833080000,
+      "created": 1793833080000,
+      "url": "{{ _.base_url }}/auth/register",
+      "name": "Autenticação - cadastrar conta",
+      "description": "Cria uma conta comum e retorna um token. Nunca envie senha de gestor neste endpoint.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Usuario Insomnia\",\n  \"email\": \"usuario.insomnia@example.com\",\n  \"senha\": \"SenhaLocal123!\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 1.5,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_login",
+      "parentId": "wrk_api_cotacoes",
+      "modified": 1793833080000,
+      "created": 1793833080000,
+      "url": "{{ _.base_url }}/auth/login",
+      "name": "Autenticação - login cliente",
+      "description": "Use a mesma conta criada em Autenticação - cadastrar conta. Copie o token da resposta para token no Base Environment.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"usuario.insomnia@example.com\",\n  \"senha\": \"SenhaLocal123!\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 1.6,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_login_manager",
+      "parentId": "wrk_api_cotacoes",
+      "modified": 1793833080000,
+      "created": 1793833080000,
+      "url": "{{ _.base_url }}/auth/login",
+      "name": "Autenticação - login gestor",
+      "description": "Preencha manager_email e manager_password no Base Environment conforme o .env.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"{{ _.manager_email }}\",\n  \"senha\": \"{{ _.manager_password }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 1.7,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_clientes",
+      "parentId": "wrk_api_cotacoes",
+      "modified": 1793833080000,
+      "created": 1793833080000,
+      "url": "{{ _.base_url }}/clientes",
+      "name": "Listar clientes",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 2,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_criar_cliente",
+      "parentId": "wrk_api_cotacoes",
+      "modified": 1793833080000,
+      "created": 1793833080000,
+      "url": "{{ _.base_url }}/clientes",
+      "name": "Cadastrar cliente",
+      "description": "Troque o e-mail por um endereço ainda não cadastrado se receber conflito 409.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Cliente Insomnia\",\n  \"email\": \"cliente.insomnia@example.com\",\n  \"telefone\": \"19999990000\",\n  \"regiao\": \"São João da Boa Vista\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 3,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_produtos",
+      "parentId": "wrk_api_cotacoes",
+      "modified": 1793833080000,
+      "created": 1793833080000,
+      "url": "{{ _.base_url }}/produtos",
+      "name": "Listar produtos",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 4,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_pontos",
+      "parentId": "wrk_api_cotacoes",
+      "modified": 1793833080000,
+      "created": 1793833080000,
+      "url": "{{ _.base_url }}/pontos-de-venda",
+      "name": "Listar pontos de venda",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 5,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_pontos_regiao",
+      "parentId": "wrk_api_cotacoes",
+      "modified": 1793833080000,
+      "created": 1793833080000,
+      "url": "{{ _.base_url }}/pontos-de-venda?regiao=Aguaí",
+      "name": "Filtrar pontos por região",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 6,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_criar_cotacao",
+      "parentId": "wrk_api_cotacoes",
+      "modified": 1793833080000,
+      "created": 1793833080000,
+      "url": "{{ _.base_url }}/cotacoes",
+      "name": "Criar cotação",
+      "description": "Antes de enviar, preencha cliente_id, ponto_de_venda_id e produto_id no ambiente usando os IDs retornados pelas listagens.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"clienteId\": \"{{ _.cliente_id }}\",\n  \"pontoDeVendaId\": \"{{ _.ponto_de_venda_id }}\",\n  \"mensagem\": \"Cotação criada pelo Insomnia\",\n  \"itens\": [\n    {\n      \"produtoId\": \"{{ _.produto_id }}\",\n      \"quantidade\": 2\n    }\n  ]\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": 7,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_cotacoes_todas",
+      "parentId": "wrk_api_cotacoes",
+      "modified": 1793833080000,
+      "created": 1793833080000,
+      "url": "{{ _.base_url }}/gestor/cotacoes",
+      "name": "Gestor - listar cotações",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": 8,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_cotacoes_pendentes",
+      "parentId": "wrk_api_cotacoes",
+      "modified": 1793833080000,
+      "created": 1793833080000,
+      "url": "{{ _.base_url }}/gestor/cotacoes/pendentes",
+      "name": "Gestor - listar pendentes",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": 9,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    }
+  ]
+}

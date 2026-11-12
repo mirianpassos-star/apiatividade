@@ -1,0 +1,57 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Usuario Exemplo",
+      "email": "usuario@helpdesk.local",
+      "password": "Usuario@123",
+      "role": "usuario"
+    }
+  ],
+  "adm_users": [
+    {
+      "id": 1,
+      "name": "Administrador HelpDesk",
+      "email": "admin@helpdesk.local",
+      "password": "Admin@123",
+      "role": "admin"
+    }
+  ],
+  "tickets": [
+    {
+      "id": 1,
+      "title": "Problema no login",
+      "description": "Usuário não consegue acessar o sistema",
+      "status": "Aberto",
+      "priority": "Alta"
+    },
+    {
+      "id": 2,
+      "title": "Atualização de cadastro",
+      "description": "Cliente solicitou alteração do endereço",
+      "status": "Em andamento",
+      "priority": "Media"
+    },
+    {
+      "id": 3,
+      "title": "Troca de senha",
+      "description": "Senha do usuário foi redefinida",
+      "status": "Concluido",
+      "priority": "Baixa"
+    },
+    {
+      "id": 4,
+      "title": "Erro ao gerar relatório",
+      "description": "O relatório financeiro não está sendo gerado",
+      "status": "Aberto",
+      "priority": "Alta"
+    },
+    {
+      "id": 5,
+      "title": "Atualização de informações",
+      "description": "Solicitação de atualização dos dados cadastrais",
+      "status": "Em andamento",
+      "priority": "Baixa"
+    }
+  ]
+}

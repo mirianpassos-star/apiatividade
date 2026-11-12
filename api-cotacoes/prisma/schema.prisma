@@ -1,0 +1,119 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum PerfilUsuario {
+  CLIENTE
+  GESTOR
+}
+
+model Usuario {
+  /// Identificador único da conta.
+  identificador String        @id @default(uuid()) @map("id")
+  /// Nome exibido da conta.
+  nome          String
+  /// E-mail usado para login.
+  email         String        @unique
+  /// Hash bcrypt da senha; nunca armazenar a senha em texto puro.
+  senhaHash     String
+  /// Perfil autorizado pela API.
+  perfil        PerfilUsuario @default(CLIENTE)
+  /// Data e hora do cadastro.
+  dataCadastro  DateTime      @default(now()) @map("createdAt")
+}
+
+model Cliente {
+  /// Identificador único do cliente.
+  identificador String    @id @default(uuid()) @map("id")
+  /// Nome completo ou nome de contato.
+  nome          String
+  /// Endereço de e-mail exclusivo do cliente.
+  email         String    @unique
+  /// Telefone para contato.
+  telefone      String
+  /// Região de atendimento do cliente.
+  regiao        String
+  /// Cotações solicitadas por este cliente.
+  cotacoes      Cotacao[]
+  /// Data e hora do cadastro.
+  dataCadastro  DateTime  @default(now()) @map("createdAt")
+}
+
+model Produto {
+  /// Identificador único do produto.
+  identificador String        @id @default(uuid()) @map("id")
+  /// Nome exibido no catálogo.
+  nome          String
+  /// Descrição do produto.
+  descricao     String
+  /// URL da imagem do produto para exibição no catálogo.
+  imagem        String?
+  /// Preço base utilizado para iniciar uma cotação.
+  precoBase     Float
+  /// Indica se o produto está disponível no catálogo.
+  ativo         Boolean       @default(true)
+  /// Itens de cotação que fazem referência a este produto.
+  itens         ItemCotacao[]
+  /// Data e hora do cadastro.
+  dataCadastro  DateTime      @default(now()) @map("createdAt")
+}
+
+model PontoDeVenda {
+  /// Identificador único do ponto de venda.
+  identificador String    @id @default(uuid()) @map("id")
+  /// Nome do estabelecimento ou unidade.
+  nome          String
+  /// Endereço físico.
+  endereco      String
+  /// Coordenada de latitude.
+  latitude      Float
+  /// Coordenada de longitude.
+  longitude     Float
+  /// Região atendida pelo ponto de venda.
+  regiao        String
+  /// Cotações direcionadas a este ponto de venda.
+  cotacoes      Cotacao[]
+}
+
+model Cotacao {
+  /// Identificador único da cotação.
+  identificador             String        @id @default(uuid()) @map("id")
+  /// Data e hora em que a cotação foi criada.
+  dataCriacao               DateTime      @default(now())
+  /// Situação atual da cotação.
+  status                    String        @default("PENDENTE")
+  /// Mensagem opcional enviada pelo cliente.
+  mensagem                  String?
+  /// Identificador do cliente que solicitou a cotação.
+  identificadorCliente      String        @map("clienteId")
+  /// Cliente que solicitou a cotação.
+  cliente                   Cliente       @relation(fields: [identificadorCliente], references: [identificador])
+  /// Identificador do ponto de venda responsável pelo atendimento.
+  identificadorPontoDeVenda String        @map("pontoDeVendaId")
+  /// Ponto de venda responsável pelo atendimento.
+  pontoDeVenda              PontoDeVenda  @relation(fields: [identificadorPontoDeVenda], references: [identificador])
+  /// Produtos e quantidades solicitados.
+  itens                     ItemCotacao[]
+}
+
+model ItemCotacao {
+  /// Identificador único do item da cotação.
+  identificador        String  @id @default(uuid()) @map("id")
+  /// Identificador da cotação à qual este item pertence.
+  identificadorCotacao String  @map("cotacaoId")
+  /// Cotação à qual este item pertence.
+  cotacao              Cotacao @relation(fields: [identificadorCotacao], references: [identificador])
+  /// Identificador do produto solicitado.
+  identificadorProduto String  @map("produtoId")
+  /// Produto solicitado.
+  produto              Produto @relation(fields: [identificadorProduto], references: [identificador])
+  /// Quantidade solicitada.
+  quantidade           Int
+  /// Preço unitário registrado para esta cotação.
+  precoUnitario        Float
+}

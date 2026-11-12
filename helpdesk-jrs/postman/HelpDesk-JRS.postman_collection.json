@@ -1,0 +1,233 @@
+{
+  "info": {
+    "name": "HelpDesk JRS - API local",
+    "description": "Colecao didatica para autenticacao JWT, consultas e CRUD local. Execute somente contra 127.0.0.1.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://127.0.0.1:8081" },
+    { "key": "userEmail", "value": "usuario@helpdesk.local" },
+    { "key": "userPassword", "value": "Usuario@123" },
+    { "key": "adminEmail", "value": "admin@helpdesk.local" },
+    { "key": "adminPassword", "value": "Admin@123" },
+    { "key": "userToken", "value": "" },
+    { "key": "adminToken", "value": "" },
+    { "key": "newTicketId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "01 - Autenticacao",
+      "item": [
+        {
+          "name": "Login de usuario",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login de usuario bem-sucedido', function () { pm.response.to.have.status(200); });",
+                  "const body = pm.response.json();",
+                  "pm.expect(body.access_token).to.be.a('string');",
+                  "pm.collectionVariables.set('userToken', body.access_token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\":\"{{userEmail}}\",\"password\":\"{{userPassword}}\"}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/auth"
+          }
+        },
+        {
+          "name": "Login de administrador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login admin bem-sucedido', function () { pm.response.to.have.status(200); });",
+                  "const body = pm.response.json();",
+                  "pm.expect(body.access_token).to.be.a('string');",
+                  "pm.collectionVariables.set('adminToken', body.access_token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\":\"{{adminEmail}}\",\"password\":\"{{adminPassword}}\",\"admin\":true}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/auth"
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 - Consultas de chamados",
+      "item": [
+        {
+          "name": "GET tickets sem token (deve negar)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Consulta sem JWT negada', function () { pm.response.to.have.status(403); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tickets"
+          }
+        },
+        {
+          "name": "GET tickets com usuario",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": "{{baseUrl}}/tickets"
+          }
+        },
+        {
+          "name": "GET ticket por id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": "{{baseUrl}}/tickets/1"
+          }
+        },
+        {
+          "name": "GET tickets por status",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": "{{baseUrl}}/tickets?status=Aberto"
+          }
+        },
+        {
+          "name": "GET tickets paginados",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": "{{baseUrl}}/tickets?page=1&limit=2"
+          }
+        },
+        {
+          "name": "GET meu perfil",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": "{{baseUrl}}/me"
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 - CRUD administrativo",
+      "item": [
+        {
+          "name": "POST criar ticket",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Ticket criado', function () { pm.response.to.have.status(200); });",
+                  "const body = pm.response.json();",
+                  "if (body.id !== undefined) pm.collectionVariables.set('newTicketId', body.id);",
+                  "else if (body.data && body.data.id !== undefined) pm.collectionVariables.set('newTicketId', body.data.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"title\":\"Ticket de teste Postman\",\"description\":\"Chamado temporario para validar o CRUD local\",\"status\":\"Aberto\",\"priority\":\"Media\"}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/tickets"
+          }
+        },
+        {
+          "name": "PUT atualizar ticket criado",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"title\":\"Ticket de teste atualizado\",\"description\":\"Atualizado pelo Postman\",\"status\":\"Em andamento\",\"priority\":\"Alta\"}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/tickets/{{newTicketId}}"
+          }
+        },
+        {
+          "name": "DELETE excluir ticket criado",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/tickets/{{newTicketId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 - Auditoria didatica",
+      "description": "Os limites de seguranca do JRS 3.2.1 estao descritos no README. Nao execute esta API fora de localhost nem use dados ou credenciais reais.",
+      "item": [
+        {
+          "name": "Checar bloqueio de escrita para usuario comum",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('POST administrativo negado ao usuario comum', function () { pm.response.to.have.status(403); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{userToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"title\":\"Verificacao local\",\"description\":\"Teste sem dados pessoais\",\"status\":\"Aberto\",\"priority\":\"Baixa\"}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/tickets"
+          }
+        }
+      ]
+    }
+  ]
+}
